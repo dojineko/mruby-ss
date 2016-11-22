@@ -1,0 +1,6 @@
+name: mruby-ss
+description: SS class
+author: dojineko
+website: https://github.com/dojineko/mruby-ss
+protocol: git
+repository: https://github.com/dojineko/mruby-ss.git
