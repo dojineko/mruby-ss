@@ -6,12 +6,11 @@
 ** See Copyright Notice in LICENSE
 */
 
-#include <string.h>
-#include <arpa/inet.h>
-
 #include "mruby.h"
 #include "mruby/data.h"
 #include "mruby/class.h"
+
+#include "ipv4.h"
 
 typedef struct {
   char* ip;
@@ -46,50 +45,9 @@ static mrb_value mrb_ss_init(mrb_state* mrb, mrb_value self) {
   return self;
 }
 
-static mrb_value mrb_tcp_is_listen(mrb_state* mrb, mrb_value self) {
-  mrb_tcp_data* data = (mrb_tcp_data*)DATA_PTR(self);
-  int check_port = data->port;
-
-  FILE* procinfo;
-  char buffer[8162];
-  unsigned long txq;
-  unsigned long rxq;
-  unsigned long time_len;
-  unsigned long retr;
-  unsigned long inode;
-  int d;
-  int local_port;
-  int rem_port;
-  int state;
-  int timer_run;
-  int uid;
-  int timeout;
-  char local_addr[128];
-  char rem_addr[128];
-  char more[512];
-
-  procinfo = fopen("/proc/net/tcp", "r");
-
-  do {
-    if (fgets(buffer, sizeof(buffer), procinfo)) {
-      sscanf(buffer, "%d: %64[0-9A-Fa-f]:%X %64[0-9A-Fa-f]:%X %X %lX:%lX %X:%lX "
-                     "%lX %d %d %ld %512s\n",
-             &d, local_addr, &local_port, rem_addr, &rem_port, &state, &txq, &rxq,
-             &timer_run, &time_len, &retr, &uid, &timeout, &inode, more);
-
-      if (check_port == local_port) {
-        struct sockaddr_in localaddr;
-        sscanf(local_addr, "%X", &((struct sockaddr_in *)&localaddr)->sin_addr.s_addr);
-        ((struct sockaddr *)&localaddr)->sa_family = AF_INET;
-
-        if ( strcmp( data->ip, inet_ntoa(localaddr.sin_addr) ) == 0 ) {
-            return mrb_bool_value(TRUE);
-        }
-      }
-    }
-  } while (!feof(procinfo));
-
-  return mrb_bool_value(FALSE);
+static mrb_value mrb_tcp_is_listen( mrb_state* mrb, mrb_value self ) {
+  mrb_tcp_data* data = ( mrb_tcp_data* )DATA_PTR( self );
+  return mrb_bool_value( search_listen( "/proc/net/tcp", data->ip, data->port ) );
 }
 
 void mrb_init_tcp(mrb_state* mrb) {
