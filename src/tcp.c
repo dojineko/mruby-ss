@@ -95,7 +95,7 @@ static mrb_value mrb_tcp_is_listen(mrb_state* mrb, mrb_value self) {
 void mrb_init_tcp(mrb_state* mrb) {
   struct RClass* ss;
   struct RClass* tcp;
-  ss = mrb_class_get(mrb, "SS");
+  ss = mrb_module_get(mrb, "SS");
   tcp = mrb_define_class_under(mrb, ss, "TCP", mrb->object_class);
   MRB_SET_INSTANCE_TT(tcp, MRB_TT_DATA);
 

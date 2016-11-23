@@ -7,7 +7,6 @@
 */
 
 #include "mruby.h"
-#include "mruby/data.h"
 #include "mrb_ss.h"
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
