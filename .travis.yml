@@ -1,15 +1,10 @@
 language: c
-compiler:
-  - gcc
-  - clang
+sudo: required
+services:
+  - docker
 before_install:
-    - sudo apt-get -qq update
-install:
-    - sudo apt-get -qq install rake bison git gperf
-before_script:
-  - cd ../
-  - git clone https://github.com/mruby/mruby.git
-  - cd mruby
-  - cp -fp ../mruby-ss/.travis_build_config.rb build_config.rb
+- sudo apt-get -qqy update
+- sudo apt-get install -qqy ruby rubygems
+- gem install rake
 script:
-  - make all test
+- rake docker
