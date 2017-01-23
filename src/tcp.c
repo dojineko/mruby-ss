@@ -32,6 +32,7 @@ static mrb_value mrb_ss_init(mrb_state* mrb, mrb_value self) {
   int port;
   char* ns;
   int ns_len;
+  ns_len = 0;
 
   data = (mrb_tcp_data*)DATA_PTR(self);
   if (data) {
@@ -41,6 +42,7 @@ static mrb_value mrb_ss_init(mrb_state* mrb, mrb_value self) {
   DATA_PTR(self) = NULL;
 
   mrb_get_args(mrb, "si|s", &ip, &ip_len, &port, &ns, &ns_len);
+
   data = (mrb_tcp_data*)mrb_malloc(mrb, sizeof(mrb_tcp_data));
   data->ip = ip;
   data->ip_len = ip_len;
