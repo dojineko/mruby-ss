@@ -22,7 +22,7 @@ end
 desc "run docker"
 task :docker do
   sh "docker build -t mruby:ss ."
-  sh "docker run -v `pwd`:/tmp/mruby-ss -w /tmp/mruby-ss -it mruby:ss /bin/bash"
+  sh "docker run -v `pwd`:/tmp/mruby-ss -w /tmp/mruby-ss -it mruby:ss"
 end
 
 task :default => :test
